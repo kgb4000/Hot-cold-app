@@ -4,16 +4,14 @@ $(document).ready(function(){
 	// Variables
 	var $userGuess = $('#userGuess');
 	var $feedback = $('#feedback');
-	var guessCount = $('#count');
-	var userGuess = $('#userGuess').val();
+	var guessCount = 	$('#count').val();
 	
-	/*--- Display information modal box ---*/
+	// Display information modal box
   	$(".what").click(function(){
     	$(".overlay").fadeIn(1000);
-
   	});
 
-  	/*--- Hide information modal box ---*/
+  // Hide information modal box
   	$("a.close").click(function(){
   		$(".overlay").fadeOut(1000);
   	});
@@ -23,7 +21,7 @@ $(document).ready(function(){
   	$('a.new').on('click', function() {
   		getSecretNumber();
   		$userGuess.val('');
-  		guessCount = 0;
+  		$feedback.html('Make your Guess!');
   	});
   }
 
@@ -35,30 +33,59 @@ $(document).ready(function(){
   function getSecretNumber() {
 	  var secretNumber = Math.floor((Math.random() * 100) + 1);
 	  console.log(secretNumber);
-	
+
 		// Get user's guess
 		$('form').on('submit', function(e) {
 			e.preventDefault();
-			
-			if (userGuess === secretNumber) {
+
+			// Update user guess count
+			guessCount++;
+			console.log(guessCount);
+		  
+		  // Write user guess count into page
+		  // $('#count').text(guessCount);
+		 
+		 // Get user's guess
+			var userGuess = $('#userGuess').val();
+
+			// User guesses that are not correct, are added to a list
+			userGuesses = function() {
+		  	$('#guessList').append('<li>' + userGuess + '</li>');
+		  }
+
+			if (userGuess == secretNumber) {
 				$feedback.html('That is correct');
+				userGuesses();
 			} 
-			else if (((userGuess + 5) < secretNumber) || ((userGuess + 5) > secretNumber)) {
+
+			else if ((userGuess >= (secretNumber - 5)) && (userGuess <= (secretNumber + 5))) {
 				$feedback.html("You're hot");
+				console.log("You're hot");
+				userGuesses();
 			}
-			else if (((userGuess + 10) < secretNumber) || ((userGuess + 10) > secretNumber)) {
+			else if ((userGuess >= (secretNumber - 10)) && (userGuess <= (secretNumber + 10))) {
 				$feedback.html("You're really warm");
+				console.log("You're really warm");
+				userGuesses();
 			}
-			else if (((userGuess + 20) < secretNumber) || ((userGuess + 20) > secretNumber)) {
+			else if ((userGuess >= (secretNumber - 20)) && (userGuess <= (secretNumber + 20))) {
 				$feedback.html("You're cold");
+				console.log("You're cold");
+				userGuesses();
 			}
-			else if (((userGuess + 30) < secretNumber) || ((userGuess + 30) > secretNumber)) {
+			else if ((userGuess >= (secretNumber - 30)) && (userGuess <= (secretNumber + 30))) {
 				$feedback.html("You're very cold");
+				console.log("You're very cold");
+				userGuesses();
 			}
 			else {
-				$feedback.html("Waht the?");
+				$feedback.html("Not even close!");
+				console.log("Not even close!");
+				userGuesses();
 			}
 			$userGuess.val('');
+
+			$('#count').text(guessCount);
 
 		});
 
